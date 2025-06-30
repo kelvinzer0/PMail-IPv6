@@ -2,31 +2,50 @@ package ip
 
 import (
 	"encoding/json"
-	"io"
-	"net/http"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
 )
 
 var ip string
+
+type Config struct {
+	BindingHost string `json:"binding_host"`
+}
 
 func GetIp() string {
 	if ip != "" {
 		return ip
 	}
 
-	resp, err := http.Get("http://ip-api.com/json/?lang=zh-CN ")
-	if err != nil {
-		return "[Your Server IP]"
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode == 200 {
-		body, err := io.ReadAll(resp.Body)
-		if err == nil {
-			var queryRes map[string]string
-			_ = json.Unmarshal(body, &queryRes)
-			ip = queryRes["query"]
-			return queryRes["query"]
+	configPath := filepath.Join("config", "config.json")
+	
+	// Check if the file exists in the current working directory
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		// If not found, try to find it relative to the executable
+		exePath, err := os.Executable()
+		if err != nil {
+			log.Printf("Error getting executable path: %v", err)
+			return "0.0.0.0"
 		}
+		exeDir := filepath.Dir(exePath)
+		configPath = filepath.Join(exeDir, configPath)
 	}
-	return "[Your Server IP]"
+
+	configFile, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		log.Printf("Error reading config file: %v", err)
+		return "0.0.0.0"
+	}
+
+	var config Config
+	err = json.Unmarshal(configFile, &config)
+	if err != nil {
+		log.Printf("Error unmarshaling config file: %v", err)
+		return "0.0.0.0"
+	}
+
+	ip = config.BindingHost
+	return ip
 }

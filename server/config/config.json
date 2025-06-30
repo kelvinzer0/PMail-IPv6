@@ -13,5 +13,6 @@
   "spamFilterLevel": 0,
   "httpPort": 80,
   "httpsPort": 443,
-  "isInit": true
+  "isInit": true,
+  "binding_host": "0.0.0.0"
 }

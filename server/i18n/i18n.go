@@ -32,12 +32,34 @@ var (
 		"invalid_email_address": "Invalid e-mail address!",
 		"deleted":               "Deleted",
 		"junk":                  "Junk",
+		}
+	id = map[string]string{
+		"all_email":             "Semua Email",
+		"inbox":                 "Kotak Masuk",
+		"outbox":                "Kotak Keluar",
+		"sketch":                "Draf",
+		"aperror":               "Nama pengguna atau kata sandi salah",
+		"unknowError":           "Kesalahan tidak diketahui",
+		"succ":                  "Berhasil",
+		"send_fail":             "Gagal mengirim",
+		"att_err":               "Kesalahan dekode lampiran",
+		"login_exp":             "Sesi login telah berakhir",
+		"ip_taps":               "Ini adalah IP server Anda, pastikan sudah benar.",
+		"invalid_email_address": "Alamat email tidak valid!",
+		"deleted":               "Dihapus",
+		"junk":                  "Sampah",
 	}
 )
 
 func GetText(lang, key string) string {
 	if lang == "zhCn" {
 		text, exist := cn[key]
+		if !exist {
+			return ""
+		}
+		return text
+	} else if lang == "id" {
+		text, exist := id[key]
 		if !exist {
 			return ""
 		}
@@ -49,3 +71,4 @@ func GetText(lang, key string) string {
 	}
 	return text
 }
+

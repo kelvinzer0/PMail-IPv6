@@ -3,6 +3,7 @@ package setup
 import (
 	"fmt"
 	"github.com/Jinnrry/pmail/config"
+	"net"
 	"strings"
 
 	"github.com/Jinnrry/pmail/i18n"
@@ -29,16 +30,33 @@ func GetDNSSettings(ctx *context.Context) (map[string][]*DNSItem, error) {
 	ret := make(map[string][]*DNSItem)
 
 	for _, domain := range configData.Domains {
-		ret[domain] = []*DNSItem{
-			{Type: "A", Host: strings.ReplaceAll(configData.WebDomain, "."+configData.Domain, ""), Value: ip.GetIp(), TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
-			{Type: "A", Host: "smtp", Value: ip.GetIp(), TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
-			{Type: "A", Host: "imap", Value: ip.GetIp(), TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
-			{Type: "A", Host: "pop", Value: ip.GetIp(), TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
-			{Type: "A", Host: "@", Value: ip.GetIp(), TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+		var dnsItems []*DNSItem
+		currentIP := ip.GetIp()
+
+		if net.ParseIP(currentIP).To4() != nil { // It's an IPv4 address
+			dnsItems = append(dnsItems, []*DNSItem{
+				{Type: "A", Host: strings.ReplaceAll(configData.WebDomain, "."+configData.Domain, ""), Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "A", Host: "smtp", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "A", Host: "imap", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "A", Host: "pop", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "A", Host: "@", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+			}...)
+		} else if net.ParseIP(currentIP).To16() != nil { // It's an IPv6 address
+			dnsItems = append(dnsItems, []*DNSItem{
+				{Type: "AAAA", Host: strings.ReplaceAll(configData.WebDomain, "."+configData.Domain, ""), Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "AAAA", Host: "smtp", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "AAAA", Host: "imap", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "AAAA", Host: "pop", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+				{Type: "AAAA", Host: "@", Value: currentIP, TTL: 3600, Tips: i18n.GetText(ctx.Lang, "ip_taps")},
+			}...)
+		}
+
+		dnsItems = append(dnsItems, []*DNSItem{
 			{Type: "MX", Host: "@", Value: fmt.Sprintf("smtp.%s", domain), TTL: 3600},
 			{Type: "TXT", Host: "@", Value: "v=spf1 a mx ~all", TTL: 3600},
 			{Type: "TXT", Host: "default._domainkey", Value: auth.DkimGen(), TTL: 3600},
-		}
+		}...)
+		ret[domain] = dnsItems
 	}
 
 	return ret, nil
