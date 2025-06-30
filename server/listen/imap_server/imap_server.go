@@ -2,7 +2,9 @@ package imap_server
 
 import (
 	"crypto/tls"
+	"fmt"
 	"github.com/Jinnrry/pmail/config"
+	"github.com/Jinnrry/pmail/utils/ip"
 	"github.com/emersion/go-imap/v2"
 	"github.com/emersion/go-imap/v2/imapserver"
 	log "github.com/sirupsen/logrus"
@@ -48,7 +50,7 @@ func StarTLS() {
 
 	instanceTLS = imapserver.New(option)
 
-	bindingHost := config.Instance.BindingHost
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
 	}

@@ -12,6 +12,7 @@ import (
 	"github.com/Jinnrry/pmail/session"
 	"github.com/Jinnrry/pmail/utils/context"
 	"github.com/Jinnrry/pmail/utils/id"
+	"github.com/Jinnrry/pmail/utils/ip"
 	olog "log"
 	"net/http"
 	"time"
@@ -46,7 +47,7 @@ func HttpsStart() {
 		HttpsPort = config.Instance.HttpsPort
 	}
 
-	bindingHost := config.Instance.BindingHost
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
 	}

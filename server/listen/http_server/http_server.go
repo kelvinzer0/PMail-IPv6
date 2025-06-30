@@ -7,6 +7,7 @@ import (
 	"github.com/Jinnrry/pmail/controllers"
 	"github.com/Jinnrry/pmail/controllers/email"
 	"github.com/Jinnrry/pmail/session"
+	"github.com/Jinnrry/pmail/utils/ip"
 	log "github.com/sirupsen/logrus"
 	"io/fs"
 	"net/http"
@@ -66,7 +67,7 @@ func HttpStart() {
 		HttpPort = config.Instance.HttpPort
 	}
 
-	bindingHost := config.Instance.BindingHost
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
 	}
@@ -74,8 +75,7 @@ func HttpStart() {
 	addr := fmt.Sprintf("%s:%d", bindingHost, HttpPort)
 
 	if config.Instance.HttpsEnabled != 2 {
-		mux.HandleFunc("/api/ping", controllers.Ping)
-		mux.HandleFunc("/", controllers.Interceptor)
+		log.Infof("HttpServer Start On %s", addr)
 		httpServer = &http.Server{
 			Addr:         addr,
 			Handler:      mux,
@@ -100,3 +100,5 @@ func HttpStart() {
 		panic(err)
 	}
 }
+
+

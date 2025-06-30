@@ -1,10 +1,10 @@
 package pop3_server
 
 import (
-	"crypto/rand"
 	"crypto/tls"
 	"github.com/Jinnrry/gopop"
 	"github.com/Jinnrry/pmail/config"
+	"github.com/Jinnrry/pmail/utils/ip"
 	log "github.com/sirupsen/logrus"
 	"time"
 )
@@ -12,19 +12,19 @@ import (
 var instance *gopop.Server
 var instanceTls *gopop.Server
 
-func StartWithTls() {
-	crt, err := tls.LoadX509KeyPair(config.Instance.SSLPublicKeyPath, config.Instance.SSLPrivateKeyPath)
-	if err != nil {
-		panic(err)
-	}
-	tlsConfig := &tls.Config{}
-	tlsConfig.Certificates = []tls.Certificate{crt}
-	tlsConfig.Time = time.Now
-	tlsConfig.Rand = rand.Reader
-
-	bindingHost := config.Instance.BindingHost
+func StartPop3ServerWithTLS() {
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
+	}
+
+	cert, err := tls.LoadX509KeyPair(config.Instance.SSLPublicKeyPath, config.Instance.SSLPrivateKeyPath)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{cert},
 	}
 
 	instanceTls = gopop.NewPop3Server(995, bindingHost, true, tlsConfig, action{})
@@ -38,19 +38,19 @@ func StartWithTls() {
 	}
 }
 
-func Start() {
-	crt, err := tls.LoadX509KeyPair(config.Instance.SSLPublicKeyPath, config.Instance.SSLPrivateKeyPath)
-	if err != nil {
-		panic(err)
-	}
-	tlsConfig := &tls.Config{}
-	tlsConfig.Certificates = []tls.Certificate{crt}
-	tlsConfig.Time = time.Now
-	tlsConfig.Rand = rand.Reader
-
-	bindingHost := config.Instance.BindingHost
+func StartPop3Server() {
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
+	}
+
+	cert, err := tls.LoadX509KeyPair(config.Instance.SSLPublicKeyPath, config.Instance.SSLPrivateKeyPath)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	tlsConfig := &tls.Config{
+		Certificates: []tls.Certificate{cert},
 	}
 
 	instance = gopop.NewPop3Server(110, bindingHost, false, tlsConfig, action{})

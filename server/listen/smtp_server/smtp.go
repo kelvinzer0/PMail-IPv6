@@ -2,7 +2,9 @@ package smtp_server
 
 import (
 	"crypto/tls"
+	"fmt"
 	"github.com/Jinnrry/pmail/config"
+	"github.com/Jinnrry/pmail/utils/ip"
 	"github.com/emersion/go-smtp"
 	log "github.com/sirupsen/logrus"
 	"time"
@@ -17,7 +19,7 @@ func StartWithTLSNew() {
 
 	instanceTlsNew = smtp.NewServer(be)
 
-	bindingHost := config.Instance.BindingHost
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
 	}
@@ -50,7 +52,7 @@ func StartWithTLS() {
 
 	instanceTls = smtp.NewServer(be)
 
-	bindingHost := config.Instance.BindingHost
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
 	}
@@ -83,7 +85,7 @@ func Start() {
 
 	instance = smtp.NewServer(be)
 
-	bindingHost := config.Instance.BindingHost
+	bindingHost := ip.GetIp()
 	if bindingHost == "" {
 		bindingHost = "0.0.0.0"
 	}
