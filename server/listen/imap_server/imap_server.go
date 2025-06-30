@@ -47,8 +47,16 @@ func StarTLS() {
 	}
 
 	instanceTLS = imapserver.New(option)
-	log.Infof("IMAP With TLS Server Start On Port :993")
-	if err := instanceTLS.ListenAndServeTLS(":993"); err != nil {
+
+	bindingHost := config.Instance.BindingHost
+	if bindingHost == "" {
+		bindingHost = "0.0.0.0"
+	}
+
+	addr := fmt.Sprintf("%s:%d", bindingHost, 993)
+
+	log.Infof("IMAP With TLS Server Start On %s", addr)
+	if err := instanceTLS.ListenAndServeTLS(addr); err != nil {
 		panic(err)
 	}
 }

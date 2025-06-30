@@ -46,10 +46,17 @@ func HttpsStart() {
 		HttpsPort = config.Instance.HttpsPort
 	}
 
+	bindingHost := config.Instance.BindingHost
+	if bindingHost == "" {
+		bindingHost = "0.0.0.0"
+	}
+
+	addr := fmt.Sprintf("%s:%d", bindingHost, HttpsPort)
+
 	if config.Instance.HttpsEnabled != 2 {
-		log.Infof("Https Server Start On Port :%d", HttpsPort)
+		log.Infof("Https Server Start On %s", addr)
 		httpsServer = &http.Server{
-			Addr:         fmt.Sprintf(":%d", HttpsPort),
+			Addr:         addr,
 			Handler:      session.Instance.LoadAndSave(mux),
 			ReadTimeout:  time.Second * 90,
 			WriteTimeout: time.Second * 90,
@@ -61,6 +68,7 @@ func HttpsStart() {
 		}
 	}
 }
+
 
 func HttpsStop() {
 	if httpsServer != nil {

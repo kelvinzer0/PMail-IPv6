@@ -66,11 +66,18 @@ func HttpStart() {
 		HttpPort = config.Instance.HttpPort
 	}
 
+	bindingHost := config.Instance.BindingHost
+	if bindingHost == "" {
+		bindingHost = "0.0.0.0"
+	}
+
+	addr := fmt.Sprintf("%s:%d", bindingHost, HttpPort)
+
 	if config.Instance.HttpsEnabled != 2 {
 		mux.HandleFunc("/api/ping", controllers.Ping)
 		mux.HandleFunc("/", controllers.Interceptor)
 		httpServer = &http.Server{
-			Addr:         fmt.Sprintf(":%d", HttpPort),
+			Addr:         addr,
 			Handler:      mux,
 			ReadTimeout:  time.Second * 90,
 			WriteTimeout: time.Second * 90,
@@ -79,9 +86,9 @@ func HttpStart() {
 
 		router(mux)
 
-		log.Infof("HttpServer Start On Port :%d", HttpPort)
+		log.Infof("HttpServer Start On %s", addr)
 		httpServer = &http.Server{
-			Addr:         fmt.Sprintf(":%d", HttpPort),
+			Addr:         addr,
 			Handler:      session.Instance.LoadAndSave(mux),
 			ReadTimeout:  time.Second * 90,
 			WriteTimeout: time.Second * 90,

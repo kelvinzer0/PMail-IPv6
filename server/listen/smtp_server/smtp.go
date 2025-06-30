@@ -17,7 +17,12 @@ func StartWithTLSNew() {
 
 	instanceTlsNew = smtp.NewServer(be)
 
-	instanceTlsNew.Addr = ":587"
+	bindingHost := config.Instance.BindingHost
+	if bindingHost == "" {
+		bindingHost = "0.0.0.0"
+	}
+
+	instanceTlsNew.Addr = fmt.Sprintf("%s:%d", bindingHost, 587)
 	instanceTlsNew.Domain = config.Instance.Domain
 	instanceTlsNew.ReadTimeout = 10 * time.Second
 	instanceTlsNew.WriteTimeout = 10 * time.Second
@@ -45,7 +50,12 @@ func StartWithTLS() {
 
 	instanceTls = smtp.NewServer(be)
 
-	instanceTls.Addr = ":465"
+	bindingHost := config.Instance.BindingHost
+	if bindingHost == "" {
+		bindingHost = "0.0.0.0"
+	}
+
+	instanceTls.Addr = fmt.Sprintf("%s:%d", bindingHost, 465)
 	instanceTls.Domain = config.Instance.Domain
 	instanceTls.ReadTimeout = 10 * time.Second
 	instanceTls.WriteTimeout = 10 * time.Second
@@ -73,7 +83,12 @@ func Start() {
 
 	instance = smtp.NewServer(be)
 
-	instance.Addr = ":25"
+	bindingHost := config.Instance.BindingHost
+	if bindingHost == "" {
+		bindingHost = "0.0.0.0"
+	}
+
+	instance.Addr = fmt.Sprintf("%s:%d", bindingHost, 25)
 	instance.Domain = config.Instance.Domain
 	instance.ReadTimeout = 10 * time.Second
 	instance.WriteTimeout = 10 * time.Second
