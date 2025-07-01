@@ -1,6 +1,7 @@
 <template>
   <div id="main">
     <div id="form">
+      <img src="https://codeberg.org/zcdns/mediakit/raw/branch/main/brand/logo/zcdns-dark-logo.svg" alt="Logo" class="logo">
       <el-form :model="form" label-width="120px" @keyup.enter="onSubmit">
         <el-form-item :label="lang.account">
           <el-input v-model="form.account" placeholder="User Name"/>
@@ -63,5 +64,20 @@ const onSubmit = () => {
   /* 水平居中 */
   align-items: center;
   /* 垂直居中 */
+}
+
+#form {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 150px; /* Adjust as needed */
+  margin-bottom: 20px;
 }
 </style>

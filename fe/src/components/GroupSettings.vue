@@ -12,6 +12,7 @@
             v-if="data.id === -1"
             v-model="data.label"
             @blur="onInputBlur(data)"
+            aria-label="Group Name"
           ></el-input>
           <el-button
             v-if="data.id !== 0"
@@ -19,6 +20,7 @@
             size="small"
             type="danger"
             circle
+            aria-label="Delete Group"
           >
             -
           </el-button>
@@ -28,6 +30,7 @@
             size="small"
             type="primary"
             circle
+            aria-label="Add Subgroup"
           >
             +
           </el-button>

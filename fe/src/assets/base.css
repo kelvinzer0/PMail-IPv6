@@ -71,8 +71,56 @@ body {
   line-height: 1.6;
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
     Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-size: 15px;
+  font-size: 1rem; /* WCAG: Use relative units for better scalability */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Gmail-like styling */
+:root {
+  --gmail-blue: #4285f4;
+  --gmail-light-blue: #e8f0fe;
+  --gmail-gray: #f6f6f6;
+  --gmail-dark-gray: #e0e0e0;
+  --gmail-text-color: #202124;
+  --gmail-border-color: #dadce0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  color: var(--gmail-text-color);
+  background-color: var(--gmail-gray);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#content {
+  display: flex;
+  flex-grow: 1;
+}
+
+#aside {
+  background-color: #f9f9f9;
+  border-right: 1px solid var(--gmail-border-color);
+}
+
+#main-content {
+  flex-grow: 1;
+  background-color: var(--vt-c-white);
+}
+
+#detail-view {
+  background-color: var(--vt-c-white);
+  border-left: 1px solid var(--gmail-border-color);
 }
