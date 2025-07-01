@@ -232,12 +232,11 @@ func GetEmailListByGroup(ctx *context.Context, groupName string, req ImapListReq
 		groupName = groupNames[len(groupNames)-1]
 
 		var group models.Group
-				db.Instance.Table("group").Where("user_id=? and name=?", ctx.UserID, groupName).Get(&group)
+		db.Instance.Table("group").Where("user_id=? and name=?", ctx.UserID, groupName).Get(&group)
 		if group.ID == 0 {
 			return ret
 		}
 		db.Instance.SQL(fmt.Sprintf("SELECT * from (SELECT id,email_id, is_read, ROW_NUMBER() OVER (ORDER BY id) AS serial_number FROM `user_email` WHERE (user_id = ? and group_id = ?)) a WHERE serial_number in (%s)", array.Join(req.UidList, ",")), ctx.UserID, group.ID).Find(&ue)
-	}
 	}
 
 	ueMap := map[int]*response.UserEmailUIDData{}
