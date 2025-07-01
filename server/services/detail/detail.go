@@ -105,12 +105,10 @@ func FindUE(ctx *context.Context, groupName string, req list.ImapListReq, uid bo
 			if group.ID == 0 {
 				return nil
 			}
-			db.Instance.
-				SQL(fmt.Sprintf(
-					"SELECT * from (SELECT id,email_id, is_read, ROW_NUMBER() OVER (ORDER BY id) AS serial_number FROM `user_email` WHERE (user_id = ? and group_id = ?)) a WHERE serial_number in (%s)",
-					array.Join(req.UidList, ","),
-				)).
-				Find(&ue, ctx.UserID, group.ID)
+			db.Instance.SQL(fmt.Sprintf(
+				"SELECT * from (SELECT id,email_id, is_read, ROW_NUMBER() OVER (ORDER BY id) AS serial_number FROM `user_email` WHERE (user_id = ? and group_id = ?)) a WHERE serial_number in (%s)",
+				array.Join(req.UidList, ","),
+			), ctx.UserID, group.ID).Find(&ue)
 		}
 
 		return ue

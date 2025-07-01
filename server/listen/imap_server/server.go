@@ -58,16 +58,18 @@ func (s *serverSession) Close() error {
 }
 
 func (s *serverSession) Subscribe(mailbox string) error {
+	// Not implemented
 	return nil
 }
 
 func (s *serverSession) Unsubscribe(mailbox string) error {
+	// Not implemented
 	return nil
 }
 
 func (s *serverSession) Append(mailbox string, r imap.LiteralReader, options *imap.AppendOptions) (*imap.AppendData, error) {
 	log.WithContext(s.ctx).Errorf("Append Not Implemented")
-	return nil, nil
+	return nil, imap.ErrNotSupported
 }
 
 func (s *serverSession) Unselect() error {
