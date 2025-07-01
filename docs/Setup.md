@@ -51,3 +51,48 @@ For background operation, you might use:
 ```bash
 nohup ./pmail &
 ```
+
+## PMail Systemctl Service
+
+To manage PMail as a system service, you can create a systemd unit file.
+
+1.  **Create the service file:**
+    Create a file named `pmail.service` in `/etc/systemd/system/` with the following content.
+    Remember to replace `/path/to/your/pmail` with the actual path where you extracted PMail.
+
+    ```ini
+    [Unit]
+    Description=PMail Server
+    After=network.target
+
+    [Service]
+    Type=simple
+    User=root
+    WorkingDirectory=/path/to/your/pmail
+    ExecStart=/path/to/your/pmail/pmail
+    Restart=on-failure
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+
+2.  **Reload systemd, enable, and start the service:**
+
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl enable pmail
+    sudo systemctl start pmail
+    ```
+
+3.  **Check the service status:**
+
+    ```bash
+    sudo systemctl status pmail
+    ```
+
+4.  **Stop/Restart the service:**
+
+    ```bash
+    sudo systemctl stop pmail
+    sudo systemctl restart pmail
+    ```
