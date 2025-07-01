@@ -23,6 +23,7 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"github.com/Jinnrry/pmail/config"
 	log "github.com/sirupsen/logrus"
 	"io"
@@ -56,10 +57,46 @@ type Client struct {
 	helloError error  // the error from the hello
 }
 
+// customDialer creates a net.Dialer that binds to a specific local address.
+// It intelligently determines whether to use "tcp4" or "tcp6".
+func customDialer(bindingHost string) (string, *net.Dialer, error) {
+	dialer := &net.Dialer{Timeout: 2 * time.Second}
+
+	if bindingHost == "" {
+		// If no binding host is specified, use the default behavior.
+		return "tcp", dialer, nil
+	}
+
+	ip := net.ParseIP(bindingHost)
+	if ip == nil {
+		return "", nil, fmt.Errorf("invalid binding_host IP address: %s", bindingHost)
+	}
+
+	addr := &net.TCPAddr{
+		IP:   ip,
+		Port: 0, // Let the OS choose an ephemeral port
+	}
+
+	dialer.LocalAddr = addr
+
+	if ip.To4() != nil {
+		// It's an IPv4 address
+		return "tcp4", dialer, nil
+	} else {
+		// It's an IPv6 address
+		return "tcp6", dialer, nil
+	}
+}
+
 // Dial returns a new Client connected to an SMTP server at addr.
 // The addr must include a port, as in "mail.example.com:smtp".
 func Dial(addr, fromDomain string) (*Client, error) {
-	conn, err := net.DialTimeout("tcp", addr, 2*time.Second)
+	network, dialer, err := customDialer(config.Instance.BindingHost)
+	if err != nil {
+		return nil, err
+	}
+
+	conn, err := dialer.Dial(network, addr)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +116,12 @@ func DialTls(addr, domain, fromDomain string) (*Client, error) {
 		ServerName:         domain,
 	}
 
-	conn, err := tls.DialWithDialer(&net.Dialer{Timeout: 2 * time.Second}, "tcp", addr, tlsconfig)
+	network, dialer, err := customDialer(config.Instance.BindingHost)
+	if err != nil {
+		return nil, err
+	}
+
+	conn, err := tls.DialWithDialer(dialer, network, addr, tlsconfig)
 	if err != nil {
 		return nil, err
 	}

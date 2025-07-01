@@ -22,6 +22,7 @@ import (
 var IsInit bool
 
 type Config struct {
+	BindingHost          string            `json:"bindingHost,omitempty"` // Alamat IP keluar untuk SMTP
 	LogLevel             string            `json:"logLevel"` // 日志级别
 	Domain               string            `json:"domain"`
 	Domains              []string          `json:"domains"` //多域名设置，把所有收信域名都填进去
