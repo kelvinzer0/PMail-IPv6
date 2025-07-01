@@ -20,18 +20,15 @@ watch(
 </script>
 
 <template>
-  <div id="app-container">
+  <div id="main">
     <HomeHeader/>
-    <div id="content-wrapper">
-      <aside id="aside" v-if="pageName !== 'login' && pageName !== 'setup'">
+    <div id="content">
+      <div id="aside" v-if="pageName !== 'login' && pageName !== 'setup'">
         <HomeAside/>
-      </aside>
-      <main id="main-content">
+      </div>
+      <div id="body">
         <RouterView/>
-      </main>
-      <section id="detail-view" aria-label="Email Detail View">
-        <!-- This will be used for email detail view later -->
-      </section>
+      </div>
     </div>
   </div>
 </template>
@@ -42,24 +39,9 @@ watch(
   background-color: #F1F1F1;
 }
 
-#main-content {
-  flex-grow: 1;
+#body {
+  width: 100%;
   height: 100%;
-}
-
-#detail-view {
-  width: 0;
-  height: 100%;
-  overflow: hidden;
-  transition: width 0.3s ease-in-out;
-}
-
-#content.show-detail #detail-view {
-  width: 50%; /* Adjust as needed */
-}
-
-#content.show-detail #main-content {
-  width: 50%; /* Adjust as needed */
 }
 
 #content {

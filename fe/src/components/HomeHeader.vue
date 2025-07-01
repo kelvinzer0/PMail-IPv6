@@ -1,12 +1,9 @@
 <template>
   <div id="header_main">
     <div id="logo">
-      <router-link to="/">
-        <img src="/zcdns-dark-logo.svg" alt="PMail Logo" class="logo-img"/>
+      <router-link to="/" style="text-decoration: none">
+        <el-text :line-clamp="1" size="large"><h1>PMail</h1></el-text>
       </router-link>
-    </div>
-    <div id="search-bar">
-      <input type="text" placeholder="Search mail"/>
     </div>
     <div id="settings" @click="settings" v-if="isLogin">
       <el-icon style="font-size: 25px;">
@@ -77,53 +74,36 @@ const settings = function () {
 <style scoped>
 
 #header_main {
-  height: 60px;
-  background-color: #f2f2f2;
+  height: 50px;
+  background-color: #000;
   display: flex;
-  align-items: center;
-  padding: 0 20px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 0;
 }
 
 #logo {
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
-
-.logo-img {
-  height: 40px;
-  width: auto;
-}
-
-#search-bar {
+  height: 3rem;
+  line-height: 3rem;
+  font-size: 2.3rem;
   flex-grow: 1;
-  margin: 0 20px;
+  width: 200px;
+  color: #FFF;
+  text-align: left;
 }
 
-#search-bar input {
+#logo h1 {
+  padding-left: 20px;
+  color: white;
+}
+
+#search {
+  height: 3rem;
   width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  font-size: 16px;
-  outline: none;
-}
-
-#search-bar input:focus {
-  border-color: #4285f4;
-  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
 }
 
 #settings {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-right: 0;
-}
-
-#settings .el-icon {
-  font-size: 24px;
-  color: #5f6368;
+  padding-right: 20px;
 }
 </style>

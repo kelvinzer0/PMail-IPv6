@@ -1,5 +1,6 @@
 <template>
   <div id="main">
+    <input id="search" :placeholder="lang.search" />
     <el-tree
       :data="data"
       :defaultExpandAll="true"
@@ -36,30 +37,28 @@ const handleNodeClick = function (data) {
 
 <style scoped>
 #main {
-  width: 250px;
-  background-color: #f9f9f9;
+  width: 243px;
+  background-color: #f1f1f1;
   height: 100%;
-  padding-top: 10px;
-  border-right: 1px solid #e0e0e0;
+}
+
+#search {
+  background-color: #d6e7f7;
+  width: 100%;
+  height: 40px;
+  padding-left: 10px;
+  border: none;
+  outline: none;
+  font-size: 16px;
 }
 
 .el-tree {
-  background-color: #f9f9f9;
-  padding: 10px 0;
+  background-color: #f1f1f1;
 }
 
-.el-tree-node__content {
-  height: 36px;
-  line-height: 36px;
-  padding-left: 15px !important;
-}
-
-.el-tree-node__content:hover {
-  background-color: #e8e8e8;
-}
-
-.el-tree-node.is-current > .el-tree-node__content {
-  background-color: #e8e8e8;
-  color: #4285f4;
+.add_group {
+  font-size: 14px;
+  text-align: left;
+  padding-left: 15px;
 }
 </style>
