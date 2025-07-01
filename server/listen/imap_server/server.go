@@ -1,6 +1,7 @@
 package imap_server
 
 import (
+	"errors"
 	"github.com/Jinnrry/pmail/utils/context"
 	"github.com/Jinnrry/pmail/utils/id"
 	"github.com/emersion/go-imap/v2"
@@ -69,7 +70,7 @@ func (s *serverSession) Unsubscribe(mailbox string) error {
 
 func (s *serverSession) Append(mailbox string, r imap.LiteralReader, options *imap.AppendOptions) (*imap.AppendData, error) {
 	log.WithContext(s.ctx).Errorf("Append Not Implemented")
-	return nil, imap.ErrNotSupported
+	return nil, errors.New("not supported")
 }
 
 func (s *serverSession) Unselect() error {
