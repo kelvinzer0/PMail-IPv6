@@ -1,7 +1,6 @@
 package http_server
 
 import (
-	"embed"
 	"encoding/json"
 	"fmt"
 	"github.com/Jinnrry/pmail/config"
@@ -20,9 +19,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
 )
-
-//go:embed dist/*
-var local embed.FS
 
 var httpsServer *http.Server
 
@@ -69,7 +65,6 @@ func HttpsStart() {
 		}
 	}
 }
-
 
 func HttpsStop() {
 	if httpsServer != nil {

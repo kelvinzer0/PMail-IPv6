@@ -16,9 +16,9 @@ import (
 
 func GetUserGroupList(ctx *context.Context, w http.ResponseWriter, req *http.Request) {
 	defaultGroup := []*models.Group{
-		{models.INBOX, i18n.GetText(ctx.Lang, "inbox"), 0, 0, "/"},
-		{models.Junk, i18n.GetText(ctx.Lang, "junk"), 0, 0, "/"},
-		{models.Deleted, i18n.GetText(ctx.Lang, "deleted"), 0, 0, "/"},
+		{ID: models.INBOX, Name: i18n.GetText(ctx.Lang, "inbox"), ParentId: 0, FullPath: "/"},
+		{ID: models.Junk, Name: i18n.GetText(ctx.Lang, "junk"), ParentId: 0, FullPath: "/"},
+		{ID: models.Deleted, Name: i18n.GetText(ctx.Lang, "deleted"), ParentId: 0, FullPath: "/"},
 	}
 
 	infos := group.GetGroupList(ctx)

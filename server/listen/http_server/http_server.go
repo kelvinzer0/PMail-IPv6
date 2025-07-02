@@ -9,12 +9,10 @@ import (
 	"github.com/Jinnrry/pmail/session"
 	"github.com/Jinnrry/pmail/utils/ip"
 	log "github.com/sirupsen/logrus"
-	"io/fs"
 	"net/http"
 	"time"
 )
 
-// 这个服务是为了拦截http请求转发到https
 var httpServer *http.Server
 
 func HttpStop() {
@@ -24,12 +22,6 @@ func HttpStop() {
 }
 
 func router(mux *http.ServeMux) {
-	fe, err := fs.Sub(local, "dist")
-	if err != nil {
-		panic(err)
-	}
-	mux.Handle("/", http.FileServer(http.FS(fe)))
-	// 挑战请求类似这样 /.well-known/acme-challenge/QPyMAyaWw9s5JvV1oruyqWHG7OqkHMJEHPoUz2046KM
 	mux.HandleFunc("/.well-known/", controllers.AcmeChallenge)
 	mux.HandleFunc("/api/ping", controllers.Ping)
 	mux.HandleFunc("/api/login", contextIterceptor(controllers.Login))
@@ -57,11 +49,12 @@ func router(mux *http.ServeMux) {
 	mux.HandleFunc("/api/user/list", contextIterceptor(controllers.UserList))
 	mux.HandleFunc("/api/plugin/settings/", contextIterceptor(controllers.SettingsHtml))
 	mux.HandleFunc("/api/plugin/list", contextIterceptor(controllers.GetPluginList))
-	mux.HandleFunc("/api/config", controllers.GetAppConfig)
+	mux.HandleFunc("/api/config", controllers.GetAppConfigHttp)
 }
 
 func HttpStart() {
 	mux := http.NewServeMux()
+	router(mux)
 
 	HttpPort := 80
 	if config.Instance.HttpPort > 0 {
@@ -84,9 +77,6 @@ func HttpStart() {
 			WriteTimeout: time.Second * 90,
 		}
 	} else {
-
-		router(mux)
-
 		log.Infof("HttpServer Start On %s", addr)
 		httpServer = &http.Server{
 			Addr:         addr,
@@ -101,5 +91,3 @@ func HttpStart() {
 		panic(err)
 	}
 }
-
-

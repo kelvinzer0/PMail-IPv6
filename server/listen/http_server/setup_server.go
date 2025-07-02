@@ -8,7 +8,6 @@ import (
 	"github.com/Jinnrry/pmail/utils/ip"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
-	"io/fs"
 	"net/http"
 	"os"
 	"strings"
@@ -20,11 +19,7 @@ var setupServer *http.Server
 
 func SetupStart() {
 	mux := http.NewServeMux()
-	fe, err := fs.Sub(local, "dist")
-	if err != nil {
-		panic(err)
-	}
-	mux.Handle("/", http.FileServer(http.FS(fe)))
+
 	mux.HandleFunc("/api/", contextIterceptor(controllers.Setup))
 	// 挑战请求类似这样 /.well-known/acme-challenge/QPyMAyaWw9s5JvV1oruyqWHG7OqkHMJEHPoUz2046KM
 	mux.HandleFunc("/.well-known/", controllers.AcmeChallenge)
@@ -60,7 +55,7 @@ func SetupStart() {
 		ReadTimeout:  time.Second * 60,
 		WriteTimeout: time.Second * 60,
 	}
-	err = setupServer.ListenAndServe()
+	err := setupServer.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		panic(err)
 	}

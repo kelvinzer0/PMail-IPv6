@@ -48,7 +48,7 @@ func Init(serverVersion string) {
 		go http_server.HttpsStart()
 		go http_server.HttpStart()
 		// pop3 server start
-				go pop3_server.StartPop3Server()
+		go pop3_server.StartPop3Server()
 		go pop3_server.StartPop3ServerWithTLS()
 		// imap server start
 		go imap_server.StarTLS()

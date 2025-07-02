@@ -20,7 +20,7 @@ func GetIp() string {
 	}
 
 	configPath := filepath.Join("config", "config.json")
-	
+
 	// Check if the file exists in the current working directory
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		// If not found, try to find it relative to the executable

@@ -18,6 +18,7 @@ require (
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/lib/pq v1.10.9
 	github.com/mileusna/spf v0.9.5
+	github.com/pusher/pusher-http-go/v5 v5.1.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cast v1.7.1
 	golang.org/x/crypto v0.37.0
@@ -44,7 +45,6 @@ require (
 	github.com/nxadm/tail v1.4.11 // indirect
 	github.com/onsi/ginkgo v1.16.4 // indirect
 	github.com/onsi/gomega v1.31.1 // indirect
-	github.com/pusher/pusher-http-go/v5 v5.1.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect

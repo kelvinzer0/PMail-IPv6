@@ -32,7 +32,7 @@ var (
 		"invalid_email_address": "Invalid e-mail address!",
 		"deleted":               "Deleted",
 		"junk":                  "Junk",
-		}
+	}
 	id = map[string]string{
 		"all_email":             "Semua Email",
 		"inbox":                 "Kotak Masuk",
@@ -71,4 +71,3 @@ func GetText(lang, key string) string {
 	}
 	return text
 }
-

@@ -22,35 +22,39 @@ import (
 var IsInit bool
 
 type Config struct {
-	BindingHost          string            `json:"bindingHost,omitempty"` // Alamat IP keluar untuk SMTP
-	LogLevel             string            `json:"logLevel"` // 日志级别
-	Domain               string            `json:"domain"`
-	Domains              []string          `json:"domains"` //多域名设置，把所有收信域名都填进去
-	WebDomain            string            `json:"webDomain"`
-	DkimPrivateKeyPath   string            `json:"dkimPrivateKeyPath"`
-	SSLType              string            `json:"sslType"` // 0表示自动生成证书，HTTP挑战模式，1表示用户上传证书，2表示自动-DNS挑战模式
-	SSLPrivateKeyPath    string            `json:"SSLPrivateKeyPath"`
-	SSLPublicKeyPath     string            `json:"SSLPublicKeyPath"`
-	DbDSN                string            `json:"dbDSN"`
-	DbType               string            `json:"dbType"`
-	HttpsEnabled         int               `json:"httpsEnabled"`    //后台页面是否启用https，0默认（启用），1启用，2不启用
-	SpamFilterLevel      int               `json:"spamFilterLevel"` //垃圾邮件过滤级别，0不过滤、1 spf dkim 校验均失败时过滤，2 spf校验不通过时过滤
-	HttpPort             int               `json:"httpPort"`        //http服务端口设置，默认80
-	HttpsPort            int               `json:"httpsPort"`       //https服务端口，默认443
-	WeChatPushAppId      string            `json:"weChatPushAppId"`
-	WeChatPushSecret     string            `json:"weChatPushSecret"`
-	WeChatPushTemplateId string            `json:"weChatPushTemplateId"`
-	WeChatPushUserId     string            `json:"weChatPushUserId"`
-	TgBotToken           string            `json:"tgBotToken"`
-	TgChatId             string            `json:"tgChatId"`
-	IsInit               bool              `json:"isInit"`
-	WebPushUrl           string            `json:"webPushUrl"`
-	WebPushToken         string            `json:"webPushToken"`
+	BindingHost           string            `json:"bindingHost,omitempty"` // Alamat IP keluar untuk SMTP
+	LogLevel              string            `json:"logLevel"`              // 日志级别
+	Domain                string            `json:"domain"`
+	Domains               []string          `json:"domains"` //多域名设置，把所有收信域名都填进去
+	WebDomain             string            `json:"webDomain"`
+	DkimPrivateKeyPath    string            `json:"dkimPrivateKeyPath"`
+	SSLType               string            `json:"sslType"` // 0表示自动生成证书，HTTP挑战模式，1表示用户上传证书，2表示自动-DNS挑战模式
+	SSLPrivateKeyPath     string            `json:"SSLPrivateKeyPath"`
+	SSLPublicKeyPath      string            `json:"SSLPublicKeyPath"`
+	DbDSN                 string            `json:"dbDSN"`
+	DbType                string            `json:"dbType"`
+	HttpsEnabled          int               `json:"httpsEnabled"`    //后台页面是否启用https，0默认（启用），1启用，2不启用
+	SpamFilterLevel       int               `json:"spamFilterLevel"` //垃圾邮件过滤级别，0不过滤、1 spf dkim 校验均失败时过滤，2 spf校验不通过时过滤
+	HttpPort              int               `json:"httpPort"`        //http服务端口设置，默认80
+	HttpsPort             int               `json:"httpsPort"`       //https服务端口，默认443
+	WeChatPushAppId       string            `json:"weChatPushAppId"`
+	WeChatPushSecret      string            `json:"weChatPushSecret"`
+	WeChatPushTemplateId  string            `json:"weChatPushTemplateId"`
+	WeChatPushUserId      string            `json:"weChatPushUserId"`
+	TgBotToken            string            `json:"tgBotToken"`
+	TgChatId              string            `json:"tgChatId"`
+	IsInit                bool              `json:"isInit"`
+	WebPushUrl            string            `json:"webPushUrl"`
+	WebPushToken          string            `json:"webPushToken"`
+	PusherAppID           string            `json:"pusherAppID"`
+	PusherKey             string            `json:"pusherKey"`
+	PusherSecret          string            `json:"pusherSecret"`
+	PusherCluster         string            `json:"pusherCluster"`
 	PusherBeamsInstanceId string            `json:"pusherBeamsInstanceId"`
-	PusherBeamsSecretKey string            `json:"pusherBeamsSecretKey"`
-	Tables               map[string]string `json:"-"`
-	TablesInitData       map[string]string `json:"-"`
-	setupPort            int               // 初始化阶段端口
+	PusherBeamsSecretKey  string            `json:"pusherBeamsSecretKey"`
+	Tables                map[string]string `json:"-"`
+	TablesInitData        map[string]string `json:"-"`
+	setupPort             int               // 初始化阶段端口
 }
 
 var ROOT_PATH = ""

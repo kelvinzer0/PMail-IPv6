@@ -277,16 +277,13 @@ func buildUsers(str []string) []*User {
 func (e *Email) ForwardBuildBytes(ctx *context.Context, sender *models.User) []byte {
 	var b bytes.Buffer
 
-	from := []*mail.Address{{e.From.Name, e.From.EmailAddress}}
+	from := []*mail.Address{{Name: e.From.Name, Address: e.From.EmailAddress}}
 	to := []*mail.Address{}
 	for _, user := range e.To {
-		to = append(to, &mail.Address{
-			Name:    user.Name,
-			Address: user.EmailAddress,
-		})
+		to = append(to, &mail.Address{Name: user.Name, Address: user.EmailAddress})
 	}
 
-	senderAddress := []*mail.Address{{sender.Name, fmt.Sprintf("%s@%s", sender.Account, config.Instance.Domains[0])}}
+	senderAddress := []*mail.Address{{Name: sender.Name, Address: fmt.Sprintf("%s@%s", sender.Account, config.Instance.Domains[0])}}
 	// Create our mail header
 	var h mail.Header
 	h.SetDate(time.Now())
@@ -298,10 +295,7 @@ func (e *Email) ForwardBuildBytes(ctx *context.Context, sender *models.User) []b
 	if len(e.Cc) != 0 {
 		cc := []*mail.Address{}
 		for _, user := range e.Cc {
-			cc = append(cc, &mail.Address{
-				Name:    user.Name,
-				Address: user.EmailAddress,
-			})
+			cc = append(cc, &mail.Address{Name: user.Name, Address: user.EmailAddress})
 		}
 		h.SetAddressList("Cc", cc)
 	}
@@ -360,13 +354,10 @@ func (e *Email) ForwardBuildBytes(ctx *context.Context, sender *models.User) []b
 func (e *Email) BuildBytes(ctx *context.Context, dkim bool) []byte {
 	var b bytes.Buffer
 
-	from := []*mail.Address{{e.From.Name, e.From.EmailAddress}}
+	from := []*mail.Address{{Name: e.From.Name, Address: e.From.EmailAddress}}
 	to := []*mail.Address{}
 	for _, user := range e.To {
-		to = append(to, &mail.Address{
-			Name:    user.Name,
-			Address: user.EmailAddress,
-		})
+		to = append(to, &mail.Address{Name: user.Name, Address: user.EmailAddress})
 	}
 
 	// Create our mail header
@@ -390,10 +381,7 @@ func (e *Email) BuildBytes(ctx *context.Context, dkim bool) []byte {
 	if len(e.Cc) != 0 {
 		cc := []*mail.Address{}
 		for _, user := range e.Cc {
-			cc = append(cc, &mail.Address{
-				Name:    user.Name,
-				Address: user.EmailAddress,
-			})
+			cc = append(cc, &mail.Address{Name: user.Name, Address: user.EmailAddress})
 		}
 		h.SetAddressList("Cc", cc)
 	}

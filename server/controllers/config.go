@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/Jinnrry/pmail/config"
-	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
@@ -10,10 +10,11 @@ type AppConfig struct {
 	PusherBeamsInstanceId string `json:"pusherBeamsInstanceId"`
 }
 
-// GetAppConfig returns public application configuration, including Pusher Beams Instance ID.
-func GetAppConfig(c *gin.Context) {
+// GetAppConfigHttp returns public application configuration, including Pusher Beams Instance ID.
+func GetAppConfigHttp(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	appConfig := AppConfig{
 		PusherBeamsInstanceId: config.Instance.PusherBeamsInstanceId,
 	}
-	c.JSON(http.StatusOK, appConfig)
+	json.NewEncoder(w).Encode(appConfig)
 }
