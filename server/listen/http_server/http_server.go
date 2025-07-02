@@ -50,6 +50,10 @@ func router(mux *http.ServeMux) {
 	mux.HandleFunc("/api/plugin/settings/", contextIterceptor(controllers.SettingsHtml))
 	mux.HandleFunc("/api/plugin/list", contextIterceptor(controllers.GetPluginList))
 	mux.HandleFunc("/api/config", controllers.GetAppConfigHttp)
+
+	// Serve static files from the 'fe/dist' directory
+	fs := http.FileServer(http.Dir("fe/dist"))
+	mux.Handle("/", fs)
 }
 
 func HttpStart() {
