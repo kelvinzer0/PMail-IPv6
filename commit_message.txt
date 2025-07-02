@@ -1,0 +1,9 @@
+feat: Implement frontend embedding in Go binary
+
+This commit refactors the frontend serving mechanism to embed the frontend assets directly into the Go binary using the `embed` package. This eliminates the need for copying the `fe/dist` directory separately during the build process.
+
+Changes include:
+- `server/main.go`: Added `//go:embed fe/dist` directive and passed the `embeddedFS` to `res_init.Init`.
+- `server/res_init/init.go`: Modified `Init` function to accept `embed.FS` and pass it to `http_server.HttpStart` and `http_server.HttpsStart`.
+- `server/listen/http_server/http_server.go`: Removed local `//go:embed` directive, updated `router`, `HttpStart`, and `HttpsStart` functions to accept `embed.FS` and serve files using `http.FS`.
+- `.github/workflows/release.yml`: Removed the `cp -rf ../fe/dist .` command as it's no longer needed.

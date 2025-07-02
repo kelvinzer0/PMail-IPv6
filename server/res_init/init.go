@@ -21,14 +21,7 @@ import (
 )
 
 func Init(serverVersion string, embeddedFS embed.FS) {
-
-	if !config.IsInit {
-		dirInit()
-
-		go http_server.SetupStart()
-		<-signal.InitChan
-		http_server.SetupStop()
-	}
+	dirInit()
 
 	for {
 		config.Init()

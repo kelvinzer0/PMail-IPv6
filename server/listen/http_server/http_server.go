@@ -2,23 +2,83 @@ package http_server
 
 import (
 	"embed"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/Jinnrry/pmail/config"
 	"github.com/Jinnrry/pmail/controllers"
 	"github.com/Jinnrry/pmail/controllers/email"
+	"github.com/Jinnrry/pmail/dto/response"
+	"github.com/Jinnrry/pmail/i18n"
+	"github.com/Jinnrry/pmail/models"
 	"github.com/Jinnrry/pmail/session"
+	"github.com/Jinnrry/pmail/utils/context"
+	"github.com/Jinnrry/pmail/utils/id"
 	"github.com/Jinnrry/pmail/utils/ip"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/cast"
+	"io/fs"
 	"net/http"
+	"path"
+	"strings"
 	"time"
 )
 
 var httpServer *http.Server
+var httpsServer *http.Server
 
 func HttpStop() {
 	if httpServer != nil {
 		httpServer.Close()
+	}
+}
+
+func HttpsStop() {
+	if httpsServer != nil {
+		httpsServer.Close()
+	}
+}
+
+// 注入context
+func contextIterceptor(h controllers.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if w.Header().Get("Content-Type") == "" {
+			w.Header().Set("Content-Type", "application/json")
+		}
+
+		ctx := &context.Context{}
+		ctx.Context = r.Context()
+		ctx.SetValue(context.LogID, id.GenLogID())
+		lang := r.Header.Get("Lang")
+		if lang == "" {
+			lang = "en"
+		}
+		ctx.Lang = lang
+
+		if config.IsInit {
+			user := cast.ToString(session.Instance.Get(ctx, "user"))
+			var userInfo *models.User
+			if user != "" {
+				_ = json.Unmarshal([]byte(user), &userInfo)
+			}
+			if userInfo != nil && userInfo.ID > 0 {
+				ctx.UserID = userInfo.ID
+				ctx.UserName = userInfo.Name
+				ctx.UserAccount = userInfo.Account
+				ctx.IsAdmin = userInfo.IsAdmin == 1
+			}
+
+			if ctx.UserID == 0 {
+				if r.URL.Path != "/api/ping" && r.URL.Path != "/api/login" {
+					response.NewErrorResponse(response.NeedLogin, i18n.GetText(ctx.Lang, "login_exp"), "").FPrint(w)
+					return
+				}
+			}
+		} else if r.URL.Path != "/api/setup" {
+			response.NewErrorResponse(response.NeedSetup, "", "").FPrint(w)
+			return
+		}
+		h(ctx, w, r)
 	}
 }
 
@@ -52,9 +112,43 @@ func router(mux *http.ServeMux, embeddedFS embed.FS) {
 	mux.HandleFunc("/api/plugin/list", contextIterceptor(controllers.GetPluginList))
 	mux.HandleFunc("/api/config", controllers.GetAppConfigHttp)
 
-	// Serve static files from the embedded 'fe/dist' directory
-	fs := http.FileServer(http.FS(embeddedFS))
-	mux.Handle("/", fs)
+	// Create a sub-filesystem rooted at "fe/dist"
+	distFS, err := fs.Sub(embeddedFS, "fe/dist")
+	if err != nil {
+		log.Fatalf("failed to create sub file system for frontend: %v", err)
+	}
+
+	fileServer := http.FileServer(http.FS(distFS))
+
+	// Handle all non-api requests with this handler
+	mux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fsPath := strings.TrimPrefix(r.URL.Path, "/")
+
+		// If the path is empty, it's the root.
+		if fsPath == "" {
+			fsPath = "index.html"
+		}
+
+		f, err := distFS.Open(fsPath)
+		if err != nil {
+			// File doesn't exist.
+			// If it has an extension, it's a missing asset -> 404
+			// If it has no extension, it's a route -> serve index.html
+			if path.Ext(r.URL.Path) != "" {
+				http.NotFound(w, r)
+				return
+			}
+
+			// Serve index.html
+			r.URL.Path = "/index.html" // rewrite for fileServer
+			fileServer.ServeHTTP(w, r)
+			return
+		}
+		f.Close()
+
+		// File exists, serve it.
+		fileServer.ServeHTTP(w, r)
+	}))
 }
 
 func HttpStart(embeddedFS embed.FS) {
