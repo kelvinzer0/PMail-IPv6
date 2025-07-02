@@ -1,1 +1,1 @@
-fix(ci): copy fe directory in Dockerfile
+fix(ci): run go build from root in release workflow
