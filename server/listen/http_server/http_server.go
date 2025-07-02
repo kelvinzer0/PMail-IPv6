@@ -1,7 +1,7 @@
 package http_server
 
 import (
-	"embed" // Import the embed package
+	"embed"
 	"errors"
 	"fmt"
 	"github.com/Jinnrry/pmail/config"
@@ -14,9 +14,6 @@ import (
 	"time"
 )
 
-//go:embed fe/dist
-var embeddedFiles embed.FS
-
 var httpServer *http.Server
 
 func HttpStop() {
@@ -25,7 +22,7 @@ func HttpStop() {
 	}
 }
 
-func router(mux *http.ServeMux) {
+func router(mux *http.ServeMux, embeddedFS embed.FS) {
 	mux.HandleFunc("/.well-known/", controllers.AcmeChallenge)
 	mux.HandleFunc("/api/ping", controllers.Ping)
 	mux.HandleFunc("/api/login", contextIterceptor(controllers.Login))
@@ -56,13 +53,13 @@ func router(mux *http.ServeMux) {
 	mux.HandleFunc("/api/config", controllers.GetAppConfigHttp)
 
 	// Serve static files from the embedded 'fe/dist' directory
-	fs := http.FileServer(http.FS(embeddedFiles))
+	fs := http.FileServer(http.FS(embeddedFS))
 	mux.Handle("/", fs)
 }
 
-func HttpStart() {
+func HttpStart(embeddedFS embed.FS) {
 	mux := http.NewServeMux()
-	router(mux)
+	router(mux, embeddedFS)
 
 	HttpPort := 80
 	if config.Instance.HttpPort > 0 {
@@ -95,6 +92,36 @@ func HttpStart() {
 	}
 
 	err := httpServer.ListenAndServe()
+	if err != nil && !errors.Is(err, http.ErrServerClosed) {
+		panic(err)
+	}
+}
+
+func HttpsStart(embeddedFS embed.FS) {
+	mux := http.NewServeMux()
+	router(mux, embeddedFS)
+
+	HttpsPort := 443
+	if config.Instance.HttpsPort > 0 {
+		HttpsPort = config.Instance.HttpsPort
+	}
+
+	bindingHost := ip.GetIp()
+	if bindingHost == "" {
+		bindingHost = "0.0.0.0"
+	}
+
+	addr := fmt.Sprintf("%s:%d", bindingHost, HttpsPort)
+
+	log.Infof("HttpsServer Start On %s", addr)
+	httpsServer = &http.Server{
+		Addr:         addr,
+		Handler:      session.Instance.LoadAndSave(mux),
+		ReadTimeout:  time.Second * 90,
+		WriteTimeout: time.Second * 90,
+	}
+
+	err := httpsServer.ListenAndServeTLS(config.Instance.SslCert, config.Instance.SslKey)
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(err)
 	}

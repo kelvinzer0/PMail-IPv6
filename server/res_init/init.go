@@ -1,6 +1,7 @@
 package res_init
 
 import (
+	"embed"
 	"encoding/json"
 	"github.com/Jinnrry/pmail/config"
 	"github.com/Jinnrry/pmail/db"
@@ -19,7 +20,7 @@ import (
 	"time"
 )
 
-func Init(serverVersion string) {
+func Init(serverVersion string, embeddedFS embed.FS) {
 
 	if !config.IsInit {
 		dirInit()
@@ -45,8 +46,8 @@ func Init(serverVersion string) {
 		go smtp_server.StartWithTLS()
 		go smtp_server.StartWithTLSNew()
 		// http server start
-		go http_server.HttpsStart()
-		go http_server.HttpStart()
+		go http_server.HttpsStart(embeddedFS)
+		go http_server.HttpStart(embeddedFS)
 		// pop3 server start
 		go pop3_server.StartPop3Server()
 		go pop3_server.StartPop3ServerWithTLS()

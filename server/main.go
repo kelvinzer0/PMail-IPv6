@@ -1,11 +1,15 @@
 package main
 
 import (
+	"embed" // Import the embed package
 	"github.com/Jinnrry/pmail/config"
 	"github.com/Jinnrry/pmail/listen/cron_server"
 	"github.com/Jinnrry/pmail/res_init"
 	log "github.com/sirupsen/logrus"
 )
+
+//go:embed fe/dist
+var embeddedFS embed.FS
 
 var (
 	gitHash   string
@@ -34,8 +38,9 @@ func main() {
 	go cron_server.Start()
 
 	// 核心服务启动
-	res_init.Init(version)
+	res_init.Init(version, embeddedFS)
 
 	log.Warnf("Server Stoped \n")
 
 }
+
