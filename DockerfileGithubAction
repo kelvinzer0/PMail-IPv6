@@ -4,7 +4,7 @@ ARG GITHASH
 WORKDIR /work
 
 COPY server .
-COPY fe ./fe
+COPY fe/dist ./fe/dist
 
 RUN apk update && apk add git
 RUN go build -ldflags "-s -w -X 'main.version=${VERSION}' -X 'main.goVersion=$(go version)' -X 'main.gitHash=${GITHASH}' -X 'main.buildTime=$(TZ=UTC-8 date +%Y-%m-%d" "%H:%M:%S)'" -o pmail main.go

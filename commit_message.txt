@@ -1,1 +1,1 @@
-fix(ci): run go build from root in release workflow
+fix(ci): copy fe/dist to server/fe before building
