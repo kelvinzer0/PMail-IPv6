@@ -215,7 +215,7 @@ func HttpsStart(embeddedFS embed.FS) {
 		WriteTimeout: time.Second * 90,
 	}
 
-	err := httpsServer.ListenAndServeTLS(config.Instance.SslCert, config.Instance.SslKey)
+	err := httpsServer.ListenAndServeTLS(config.Instance.SSLPublicKeyPath, config.Instance.SSLPrivateKeyPath)
 	if err != nil && !errors.Is(err, http.ErrServerClosed) {
 		panic(err)
 	}

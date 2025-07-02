@@ -1,1 +1,1 @@
-fix(ci): copy fe/dist to server/fe before building
+fix(server): use correct SSL field names in http_server
