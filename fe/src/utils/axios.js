@@ -1,7 +1,9 @@
 import axios from 'axios'
-import lang from '../i18n/i18n';
+import { lang } from '../i18n/i18n';
 import {useGlobalStatusStore} from "@/stores/useGlobalStatusStore";
 import {router} from "@/router";
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 //创建axios的一个实例
 const http = axios.create({
@@ -15,28 +17,22 @@ const http = axios.create({
 
 //请求拦截器
 http.interceptors.request.use((config) => {
+    NProgress.start(); // Start NProgress on request
     //若请求方式为post，则将data参数转为JSON字符串
     if (config.method === 'POST') {
         config.data = JSON.stringify(config.data);
     }
     return config;
-}, (error) =>
+}, (error) => {
+    NProgress.done(); // Stop NProgress on request error
     // 对请求错误做些什么
-    Promise.reject(error));
+    return Promise.reject(error);
+});
 
 //响应拦截器
 http.interceptors.response.use(async (response) => {
-    //响应成功
-    if (response.data.errorNo === 403) {
-
-        await router.replace({
-            path: '/login',
-            query: {
-                redirect: router.currentRoute.fullPath
-            }
-        });
-    }
-    //响应成功
+    NProgress.done(); // Stop NProgress on response
+    console.log("Axios response:", response.data);
     if (response.data.errorNo === 402) {
         await router.replace({
             path: '/setup',
@@ -47,6 +43,8 @@ http.interceptors.response.use(async (response) => {
     }
     return response.data;
 }, async (error) => {
+    NProgress.done(); // Stop NProgress on response error
+    console.error("Axios error response:", error.response);
     //响应错误
     if (error.response && error.response.status) {
         let message = ""

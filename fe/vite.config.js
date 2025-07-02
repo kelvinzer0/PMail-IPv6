@@ -24,7 +24,7 @@ export default defineConfig({
   server: {
     cors: true,
     proxy: {
-      "/api": "http://127.0.0.1/",
+      "/api": "http://webmail.zcdns.id/",
       "/attachments":"http://127.0.0.1/"
     }
   }

@@ -41,7 +41,7 @@
 
 <script setup>
 import { reactive } from "vue";
-import lang from "../i18n/i18n";
+import { lang } from "../i18n/i18n";
 import { http } from "@/utils/axios";
 import { ElMessage } from "element-plus";
 

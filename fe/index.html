@@ -2,12 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
+    <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+    <script>
+      function setFavicon() {
+        const favicon = document.getElementById('dynamic-favicon');
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          favicon.href = '/symbol/light.svg'; // Dark theme
+        } else {
+          favicon.href = '/symbol/dark.svg'; // Light theme or fallback
+        }
+      }
+
+      // Set favicon on initial load
+      setFavicon();
+
+      // Listen for theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setFavicon);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMail</title>
+    <title>ZCMail</title>
   </head>
   <body>
     <div id="app"></div>
+    
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

@@ -3,12 +3,11 @@ import {RouterView, useRoute} from 'vue-router'
 import HomeHeader from '@/components/HomeHeader.vue'
 import HomeAside from '@/components/HomeAside.vue';
 import {ref, watch} from 'vue'
+import {useGlobalStatusStore} from "@/stores/useGlobalStatusStore";
 
 const route = useRoute()
 const pageName = ref(route.name)
-
-
-
+const globalStatus = useGlobalStatusStore();
 
 watch(
     () => route.fullPath,
@@ -23,7 +22,7 @@ watch(
   <div id="main">
     <HomeHeader/>
     <div id="content">
-      <div id="aside" v-if="pageName !== 'login' && pageName !== 'setup'">
+      <div id="aside" v-if="pageName !== 'login' && pageName !== 'setup' && globalStatus.sidebarVisible">
         <HomeAside/>
       </div>
       <div id="body">

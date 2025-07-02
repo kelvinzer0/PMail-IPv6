@@ -29,7 +29,7 @@
 <script setup>
 import {reactive} from 'vue'
 import {ElNotification} from 'element-plus'
-import lang from '../i18n/i18n';
+import { lang } from '../i18n/i18n';
 import {http} from "@/utils/axios";
 
 const ruleForm = reactive({

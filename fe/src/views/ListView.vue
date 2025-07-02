@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <div id="operation">
       <div id="action">
-        <RouterLink to="/editer">+{{ lang.compose }}</RouterLink>
+        <button @click="goToEditer" class="modern-button">+{{ lang.compose }}</button>
       </div>
     </div>
     <div id="title">{{ groupStore.name }}</div>
@@ -100,7 +100,7 @@ import {EpArrowDownBold} from "vue-icons-plus/ep";
 import {RouterLink, useRouter} from 'vue-router'
 import {ref, watch} from 'vue'
 import useGroupStore from '../stores/group'
-import lang from '../i18n/i18n';
+import { lang } from '../i18n/i18n';
 import {http} from "@/utils/axios";
 import {ElMessage, ElMessageBox} from "element-plus";
 
@@ -109,7 +109,11 @@ const router = useRouter();
 const groupStore = useGroupStore()
 const groupList = ref([])
 const taskTableDataRef = ref(null)
-let tag = groupStore.tag;
+const tag = ref(groupStore.tag);
+
+const goToEditer = () => {
+  router.push("/editer");
+};
 
 if (tag === "") {
   tag = '{"type":0,"status":-1}'
@@ -117,15 +121,12 @@ if (tag === "") {
 
 
 watch(groupStore, async (newV) => {
-  tag = newV.tag;
-  if (tag === "") {
-    tag = '{"type":0,"status":-1}'
+  tag.value = newV.tag;
+  if (tag.value === "") {
+    tag.value = '{"type":0,"status":-1}'
   }
   data.value = []
-  http.post("/api/email/list", {tag: tag, page_size: 10}).then(res => {
-    data.value = res.data.list
-    totalPage.value = res.data.total_page
-  })
+  updateList();
 })
 
 
@@ -133,7 +134,7 @@ const data = ref([])
 const totalPage = ref(0)
 
 const updateList = function () {
-  http.post("/api/email/list", {tag: tag, page_size: 10}).then(res => {
+  http.post("/api/email/list", {tag: tag.value, page_size: 10, keyword: groupStore.searchQuery}).then(res => {
     data.value = res.data.list
     totalPage.value = res.data.total_page
   })
@@ -228,7 +229,7 @@ const del = function () {
     ids.push(element.id)
   });
 
-  let groupTag = JSON.parse(tag)
+  let groupTag = JSON.parse(tag.value)
   if (ids.length == 0) {
     ElMessageBox.alert('Unselected content', 'Notice', {
       confirmButtonText: 'OK',
@@ -271,7 +272,7 @@ const rowStyle = function () {
 }
 
 const pageChange = function (p) {
-  http.post("/api/email/list", {tag: tag, page_size: 10, current_page: p}).then(res => {
+  http.post("/api/email/list", {tag: tag.value, page_size: 10, current_page: p, keyword: groupStore.searchQuery}).then(res => {
     data.value = res.data.list
   })
 }
@@ -283,13 +284,31 @@ const pageChange = function (p) {
 #action {
   display: flex;
   flex-direction: row;
+  align-items: center; /* Align items vertically */
+  padding: 10px; /* Add padding to the action div */
 }
 
+.modern-button {
+  background-color: #0078d4; /* Microsoft blue */
+  color: white;
+  border: none;
+  padding: 6px 12px; /* Smaller padding */
+  border-radius: 4px; /* Slightly rounded corners */
+  font-size: 14px; /* Smaller font size */
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
 
-#action a,
-a:visited {
-  color: #000000;
-  text-decoration: none;
+.modern-button:hover {
+  background-color: #005a9e; /* Darker blue on hover */
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.5); /* Subtle glow on hover */
+}
+
+.modern-button:active {
+  background-color: #004a80; /* Even darker blue on click */
 }
 
 #operation {

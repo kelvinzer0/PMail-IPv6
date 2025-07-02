@@ -1,4 +1,6 @@
-let lang = {
+import { reactive } from 'vue';
+
+const enUS = {
     "logout": "Logout",
     "resetPwd": "Reset the account password",
     "disabled": "Disabled",
@@ -55,10 +57,10 @@ let lang = {
     "setOther": "Other",
     "welcome": "Welcome",
     "next": "Next",
-    "tks_pmail": "Thanks for using Pmail",
+    "tks_pmail": "Thanks for using ZCMail",
     "guid_desc": "Next, you will be guided to perform initial configuration. If you have already configured, please use your configuration file to overwrite the config folder of the running directory. If you have not configured it, please follow this guide.",
     "select_db": "select database",
-    "db_desc": "PMail currently supports MySQL and SQLite3 databases, you can choose according to your needs.",
+    "db_desc": "ZCMail currently supports MySQL and SQLite3 databases, you can choose according to your needs.",
     "type": "Type",
     "db_select_ph": "please select your database",
     "mysql_dsn": "MySQL DSN",
@@ -76,7 +78,7 @@ let lang = {
     "ssl_challenge_type": "Challenge Type",
     "ssl_auto_http": "Http Request",
     "ssl_auto_dns": "DNS Records",
-    "challenge_typ_desc": "If PMail uses port 80 directly, it is recommended that you use the HTTP challenge method.",
+    "challenge_typ_desc": "If ZCMail uses port 80 directly, it is recommended that you use the HTTP challenge method.",
     "oomain_service_provider": "Domain Name Service Provider",
     "ssl_manuallyf": "Manually configure an SSL certificate",
     "ssl_key_path": "ssl key file path",
@@ -107,13 +109,14 @@ let lang = {
     "move": "Move to group",
     "del_rule_confirm": "Are you sure to delete this?",
     "rule_params": "Executed params",
-    "autoSSLWarn": "PMail is not currently running on port 80. If you want PMail to manage SSL certificates automatically, please forward the /.well-known/* route to PMail. See https://github.com/Jinnrry/PMail/issues/94 for details.",
+    "autoSSLWarn": "ZCMail is not currently running on port 80. If you want ZCMail to manage SSL certificates automatically, please forward the /.well-known/* route to ZCMail. See https://github.com/Jinnrry/PMail/issues/94 for details.",
     "err_db_dsn_empty": "Database path cannot be empty!",
+    "login_contact_info": "For forgotten passwords or new account registrations, please contact: <a href=\"mailto:admin@zcdns.id\" style=\"color: #004e8c; text-decoration: none;\">admin@zcdns.id</a>"
 };
-
 
 const zhCN = {
     "logout": "注销",
+    "login_contact_info": "如需找回密码或注册新账号，请联系: <a href=\"mailto:admin@zcdns.id\" style=\"color: #004e8c; text-decoration: none;\">admin@zcdns.id</a>",
     "resetPwd": "重置账号密码",
     "disabled": "禁用",
     "enabled": "启用",
@@ -171,10 +174,10 @@ const zhCN = {
     "setOther": "其他设置",
     "welcome": "欢迎",
     "next": "下一步",
-    "tks_pmail": "感谢使用PMail",
+    "tks_pmail": "感谢使用ZCMail",
     "guid_desc": "接下来将会指引你进行初始化配置，如果你已有配置，请使用你的配置文件覆盖运行目录的config文件夹。如果你没有配置过，请按照该指引操作。",
     "select_db": "数据库选择",
-    "db_desc": "PMail目前支持MySQL和SQLite3两种数据库，你可根据需要选择。",
+    "db_desc": "ZCMail目前支持MySQL和SQLite3两种数据库，你可根据需要选择。",
     "type": "类型",
     "db_select_ph": "请选择你的数据库",
     "mysql_dsn": "MySQL DSN",
@@ -190,7 +193,7 @@ const zhCN = {
     "ssl_auto_dns": "DNS记录",
     "ssl_challenge_type": "验证方式",
     "ssl_manuallyf": "手动配置SSL证书",
-    "challenge_typ_desc": "如果PMail直接使用80端口，建议使用HTTP验证方式。",
+    "challenge_typ_desc": "如果ZCMail直接使用80端口，建议使用HTTP验证方式。",
     "wait_desc": "请稍等",
     "dns_challenge_wait": "DNS传播和缓存刷新时间较长，此处可能等待10-30分钟",
     "ssl_key_path": "ssl key文件位置",
@@ -221,8 +224,8 @@ const zhCN = {
     "move": "移动分组",
     "del_rule_confirm": "确定要删除吗？",
     "rule_params": "执行参数",
-    "autoSSLWarn": "PMail当前未使用80端口启动，如果想要PMail自动管理SSL证书，请将/.well-known/*路由转发到PMail。 详见https://github.com/Jinnrry/PMail/issues/94",
-    "err_db_dsn_empty": "数据库路径不能为空!",
+    "autoSSLWarn": "ZCMail当前未使用80端口启动，如果想要ZCMail自动管理SSL证书，请将/.well-known/*路由转发到ZCMail。 详见https://github.com/Jinnrry/PMail/issues/94",
+    "err_db_dsn_empty": "数据库路径不能为空!"
 }
 
 const idID = {
@@ -282,10 +285,10 @@ const idID = {
     "setOther": "Lainnya",
     "welcome": "Selamat Datang",
     "next": "Berikutnya",
-    "tks_pmail": "Terima kasih telah menggunakan Pmail",
+    "tks_pmail": "Terima kasih telah menggunakan ZCMail",
     "guid_desc": "Selanjutnya, Anda akan dipandu untuk melakukan konfigurasi awal. Jika Anda sudah mengkonfigurasi, silakan gunakan file konfigurasi Anda untuk menimpa folder config dari direktori yang sedang berjalan. Jika Anda belum mengkonfigurasi, silakan ikuti panduan ini.",
     "select_db": "Pilih database",
-    "db_desc": "PMail saat ini mendukung database MySQL dan SQLite3, Anda dapat memilih sesuai kebutuhan Anda.",
+    "db_desc": "ZCMail saat ini mendukung database MySQL dan SQLite3, Anda dapat memilih sesuai kebutuhan Anda.",
     "type": "Tipe",
     "db_select_ph": "Silakan pilih database Anda",
     "mysql_dsn": "MySQL DSN",
@@ -293,7 +296,7 @@ const idID = {
     "sqlite_db_path": "Jalur File Data",
     "domain_desc": "Atur informasi domain Anda.",
     "smtp_domain": "Domain SMTP",
-    "web_domain": "Domain Web",
+    "web_domain": "Web Domain",
     "multi_domain_setting": "Pengaturan Multi-Domain",
     "multi_domain_setting_desc": "Ikat kotak surat ini ke beberapa domain.",
     "dns_desc": "Silakan tambahkan informasi berikut ke catatan DNS Anda",
@@ -303,7 +306,7 @@ const idID = {
     "ssl_challenge_type": "Tipe Tantangan",
     "ssl_auto_http": "Permintaan Http",
     "ssl_auto_dns": "Catatan DNS",
-    "challenge_typ_desc": "Jika PMail menggunakan port 80 secara langsung, disarankan Anda menggunakan metode tantangan HTTP.",
+    "challenge_typ_desc": "Jika ZCMail menggunakan port 80 secara langsung, disarankan Anda menggunakan metode tantangan HTTP.",
     "oomain_service_provider": "Penyedia Layanan Nama Domain",
     "ssl_manuallyf": "Konfigurasi sertifikat SSL secara manual",
     "ssl_key_path": "jalur file kunci ssl",
@@ -333,12 +336,38 @@ const idID = {
     "forward": "Teruskan",
     "move": "Pindah ke grup",
     "del_rule_confirm": "Apakah Anda yakin ingin menghapus ini?",
-    "rule_params": "Parameter yang dieksekusi",
-    "autoSSLWarn": "PMail saat ini tidak berjalan di port 80. Jika Anda ingin PMail mengelola sertifikat SSL secara otomatis, silakan teruskan rute /.well-known/* ke PMail. Lihat https://github.com/Jinnrry/PMail/issues/94 untuk detailnya.",
-    "err_db_dsn_empty": "Jalur database tidak boleh kosong!",
+    "rule_params": "执行参数",
+    "autoSSLWarn": "ZCMail saat ini tidak berjalan di port 80. Jika Anda ingin ZCMail mengelola sertifikat SSL secara otomatis, silakan teruskan rute /.well-known/* ke ZCMail. Lihat https://github.com/Jinnrry/PMail/issues/94 untuk detailnya.",
+    "err_db_dsn_empty": "Database path cannot be empty!",
+    "login_contact_info": "Untuk bantuan lupa password atau pendaftaran akun baru, silakan hubungi: <a href=\"mailto:admin@zcdns.id\" style=\"color: #004e8c; text-decoration: none;\">admin@zcdns.id</a>"
 };
 
-if (navigator.language === "zh-CN" || navigator.language === "zh") lang = zhCN;
-else if (navigator.language === "id" || navigator.language === "id-ID") lang = idID;
+const languages = {
+    'en': enUS,
+    'zh': zhCN,
+    'id': idID,
+};
 
-export default lang;
+const getInitialLang = () => {
+    const storedLang = localStorage.getItem('lang');
+    if (storedLang && languages[storedLang]) {
+        return languages[storedLang];
+    }
+    const browserLang = navigator.language;
+    if (browserLang.startsWith('zh')) return zhCN;
+    if (browserLang.startsWith('id')) return idID;
+    return enUS;
+};
+
+const lang = reactive(getInitialLang());
+
+const setLanguage = (newLangCode) => {
+    if (languages[newLangCode]) {
+        Object.assign(lang, languages[newLangCode]);
+        localStorage.setItem('lang', newLangCode);
+    }
+};
+
+export { lang, setLanguage };
+
+

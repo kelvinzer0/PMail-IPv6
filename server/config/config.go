@@ -46,6 +46,8 @@ type Config struct {
 	IsInit               bool              `json:"isInit"`
 	WebPushUrl           string            `json:"webPushUrl"`
 	WebPushToken         string            `json:"webPushToken"`
+	PusherBeamsInstanceId string            `json:"pusherBeamsInstanceId"`
+	PusherBeamsSecretKey string            `json:"pusherBeamsSecretKey"`
 	Tables               map[string]string `json:"-"`
 	TablesInitData       map[string]string `json:"-"`
 	setupPort            int               // 初始化阶段端口

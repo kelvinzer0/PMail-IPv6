@@ -115,7 +115,7 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import {ElMessage} from 'element-plus'
 import {onBeforeUnmount, reactive, ref, shallowRef} from 'vue'
 import {Close} from '@element-plus/icons-vue';
-import lang from '../i18n/i18n';
+import { lang } from '../i18n/i18n';
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
 import {i18nChangeLanguage} from '@wangeditor/editor'
 import {useRouter} from 'vue-router';

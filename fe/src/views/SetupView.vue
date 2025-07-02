@@ -12,7 +12,7 @@
 
     <div v-if="active === 0" class="ctn">
       <div class="desc">
-        <h2>{{ lang.tks_pmail }}</h2>
+        <h2>{{ lang.tks_pmail.replace("Pmail", "ZCMail") }}</h2>
         <div style="margin-top: 10px;">{{ lang.guid_desc }}</div>
       </div>
     </div>
@@ -35,16 +35,16 @@
 
           <el-form-item :label="lang.mysql_dsn" v-if="dbSettings.type === 'mysql'">
             <el-input :rows="2" type="textarea" v-model="dbSettings.dsn"
-                      placeholder="root:12345@tcp(127.0.0.1:3306)/pmail?parseTime=True&loc=Local"></el-input>
+                      placeholder="root:12345@tcp(127.0.0.1:3306)/zcmail?parseTime=True&loc=Local"></el-input>
           </el-form-item>
 
           <el-form-item :label="lang.pg_dsn" v-if="dbSettings.type === 'postgres'">
             <el-input :rows="2" type="textarea" v-model="dbSettings.dsn"
-                      placeholder="postgres://postgres:12345@127.0.0.1:5432/pmail?sslmode=disable"></el-input>
+                      placeholder="postgres://postgres:12345@127.0.0.1:5432/zcmail?sslmode=disable"></el-input>
           </el-form-item>
 
           <el-form-item :label="lang.sqlite_db_path" v-if="dbSettings.type === 'sqlite'">
-            <el-input v-model="dbSettings.dsn" placeholder="./config/pmail.db"></el-input>
+            <el-input v-model="dbSettings.dsn" placeholder="./config/zcmail.db"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -93,7 +93,7 @@
           </el-form-item>
 
           <el-form-item :label="lang.web_domain">
-            <el-input placeholder="pmail.domain.com" v-model="domainSettings.web_domain"></el-input>
+            <el-input placeholder="zcmail.domain.com" v-model="domainSettings.web_domain"></el-input>
           </el-form-item>
 
           <el-form-item :label="lang.multi_domain_setting">
@@ -227,7 +227,7 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import {ElMessage} from 'element-plus'
-import lang from '../i18n/i18n';
+import { lang } from '../i18n/i18n';
 import axios from 'axios'
 import {Plus} from '@element-plus/icons-vue'
 import {http} from "@/utils/axios";
@@ -243,7 +243,7 @@ const adminSettings = reactive({
 
 const dbSettings = reactive({
   "type": "sqlite",
-  "dsn": "./config/pmail.db",
+  "dsn": "./config/zcmail.db",
   "lable": ""
 })
 
@@ -343,7 +343,7 @@ const getDomainConfig = () => {
 
 const setDbConfig = () => {
   // 切换数据库类型为sqlite时，数据库路径为空，则使用默认路径
-  if (dbSettings.type === "sqlite" && !dbSettings.dsn) dbSettings.dsn = "./config/pmail.db";
+  if (dbSettings.type === "sqlite" && !dbSettings.dsn) dbSettings.dsn = "./config/zcmail.db";
   else if (!dbSettings.dsn) ElMessage({
     title: "Error",
     message: lang.err_db_dsn_empty,

@@ -96,7 +96,7 @@
 
 <script setup>
 import {reactive, ref} from 'vue';
-import lang from '../i18n/i18n';
+import { lang } from '../i18n/i18n';
 import {Delete, Edit, InfoFilled, Plus} from '@element-plus/icons-vue'
 import {http} from "@/utils/axios";
 import {ElNotification} from "element-plus";

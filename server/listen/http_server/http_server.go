@@ -57,6 +57,7 @@ func router(mux *http.ServeMux) {
 	mux.HandleFunc("/api/user/list", contextIterceptor(controllers.UserList))
 	mux.HandleFunc("/api/plugin/settings/", contextIterceptor(controllers.SettingsHtml))
 	mux.HandleFunc("/api/plugin/list", contextIterceptor(controllers.GetPluginList))
+	mux.HandleFunc("/api/config", controllers.GetAppConfig)
 }
 
 func HttpStart() {
