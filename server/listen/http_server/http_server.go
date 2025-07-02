@@ -1,6 +1,7 @@
 package http_server
 
 import (
+	"embed" // Import the embed package
 	"errors"
 	"fmt"
 	"github.com/Jinnrry/pmail/config"
@@ -12,6 +13,9 @@ import (
 	"net/http"
 	"time"
 )
+
+//go:embed fe/dist
+var embeddedFiles embed.FS
 
 var httpServer *http.Server
 
@@ -51,8 +55,8 @@ func router(mux *http.ServeMux) {
 	mux.HandleFunc("/api/plugin/list", contextIterceptor(controllers.GetPluginList))
 	mux.HandleFunc("/api/config", controllers.GetAppConfigHttp)
 
-	// Serve static files from the 'fe/dist' directory
-	fs := http.FileServer(http.Dir("fe/dist"))
+	// Serve static files from the embedded 'fe/dist' directory
+	fs := http.FileServer(http.FS(embeddedFiles))
 	mux.Handle("/", fs)
 }
 
