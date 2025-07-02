@@ -115,8 +115,8 @@ const goToEditer = () => {
   router.push("/editer");
 };
 
-if (tag === "") {
-  tag = '{"type":0,"status":-1}'
+if (tag.value === "") {
+  tag.value = '{"type":0,"status":-1}'
 }
 
 
