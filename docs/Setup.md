@@ -35,8 +35,8 @@ Open `config.json` with your preferred text editor and add or modify the `"bindi
 ```
 
 -   Set `"binding_host"` to `"0.0.0.0"` to bind to all available IPv4 interfaces.
--   Set `"binding_host"` to `"::"` to bind to all available IPv6 interfaces.
--   Set `"binding_host"` to a specific IPv4 address (e.g., `"192.168.1.100"`) or IPv6 address (e.g., `"2001:0db8::1"`) to bind only to that address.
+-   Set `"binding_host"` to `"[::]"` to bind to all available IPv6 interfaces.
+-   Set `"binding_host"` to a specific IPv4 address (e.g., `"192.168.1.100"`) or IPv6 address (e.g., `"[2001:0db8::1]"`) to bind only to that address.
 
 ## Running PMail
 
